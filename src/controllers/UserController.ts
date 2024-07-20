@@ -69,12 +69,16 @@ class UserController{
             return res.status(404).json({error: "Technology not found"})
         }
 
+        if(!!deadline && new Date(deadline) < new Date()){
+            return res.status(400).json({error: "Invalid date"})
+        }
+
         const technologyOld = db.getTechnology(user_name, id)
 
         const technologyNew: Technology = {
             ...technologyOld,
             title,
-            deadline: new Date(deadline)
+            deadline: deadline ? new Date(deadline) : technologyOld.deadline
         } 
 
 
@@ -89,6 +93,7 @@ class UserController{
         const db = new UserDB(data)
         const { user_name } : { user_name: string } = req.headers as { user_name: string } 
         const { id }: { id: string } = req.params as { id : string }
+        
 
         if(!db.getTechnology(user_name, id)){
             return res.status(404).json({error: "Technology not found"})
@@ -120,7 +125,7 @@ class UserController{
         db.removeTechnology(user_name, id)
 
         
-        res.json({status: "Ok"})
+        res.json({status: "Technology removed"})
     }
     
 

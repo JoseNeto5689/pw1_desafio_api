@@ -64,7 +64,6 @@ export default class UserDB{
 
     updateTechnology(userName: string, technologyId: string, technology: Technology){
         let userIndex = this.findUserByName(userName)
-        console.log(userIndex)
         let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id = technologyId)
         this.database[userIndex].technologies[technologyIndex] = { ...technology } as Technology
 
