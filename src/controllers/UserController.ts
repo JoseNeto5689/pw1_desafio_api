@@ -65,15 +65,15 @@ class UserController{
         const { title, deadline } : { title: string, deadline: string } = req.body
         const { id }: { id: string } = req.params as { id : string }
 
-        if(!db.getTechnology(user_name, id)){
+        const technologyOld = db.getTechnology(user_name, id)
+
+        if(!technologyOld){
             return res.status(404).json({error: "Technology not found"})
         }
 
         if(!!deadline && new Date(deadline) < new Date()){
             return res.status(400).json({error: "Invalid date"})
         }
-
-        const technologyOld = db.getTechnology(user_name, id)
 
         const technologyNew: Technology = {
             ...technologyOld,
@@ -93,13 +93,12 @@ class UserController{
         const db = new UserDB(data)
         const { user_name } : { user_name: string } = req.headers as { user_name: string } 
         const { id }: { id: string } = req.params as { id : string }
-        
-
-        if(!db.getTechnology(user_name, id)){
-            return res.status(404).json({error: "Technology not found"})
-        }
 
         const technologyOld = db.getTechnology(user_name, id)
+
+        if(!technologyOld){
+            return res.status(404).json({error: "Technology not found"})
+        }
 
         const technologyNew: Technology = {
             ...technologyOld,

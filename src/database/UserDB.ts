@@ -38,14 +38,14 @@ export default class UserDB{
         } as User
     }
 
-    getTechnology(user_name: string, technologyId: string) : Technology{
+    getTechnology(user_name: string, technologyId: string) : Technology | null{
         let userIndex = this.findUserByName(user_name)
         if(userIndex === -1) {
-            return {} as Technology
+            return null
         }
-        let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id = technologyId)
+        let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id === technologyId)
         if(technologyIndex === -1) {
-            return {} as Technology
+            return null
         }
         return this.database[userIndex].technologies[technologyIndex]
 
@@ -58,13 +58,16 @@ export default class UserDB{
 
     removeTechnology(userName: string, technologyId: string){
         let userIndex = this.findUserByName(userName)
-        let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id = technologyId)
+        let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id === technologyId)
         this.database[userIndex].technologies.splice(technologyIndex, 1)
     }
 
     updateTechnology(userName: string, technologyId: string, technology: Technology){
         let userIndex = this.findUserByName(userName)
-        let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id = technologyId)
+        let technologyIndex = this.database[userIndex].technologies.findIndex((value) => value.id === technologyId)
+        if(technologyIndex === -1) {
+            return null
+        }
         this.database[userIndex].technologies[technologyIndex] = { ...technology } as Technology
 
         return this.database[userIndex].technologies[technologyIndex]
