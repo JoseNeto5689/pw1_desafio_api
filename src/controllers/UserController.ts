@@ -77,7 +77,7 @@ class UserController{
 
         const technologyNew: Technology = {
             ...technologyOld,
-            title,
+            title: !!title ? title : technologyOld.title,
             deadline: deadline ? new Date(deadline) : technologyOld.deadline
         } 
 
