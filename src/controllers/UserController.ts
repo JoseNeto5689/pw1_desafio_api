@@ -10,6 +10,10 @@ class UserController{
         const db = new UserDB(data)
         const { name, user_name } : { name: string, user_name: string } = req.body
 
+        if(!name || !user_name){
+            return res.status(400).json({error: "Informations missing"})
+        }
+
         if(db.findUserByName(user_name) !== -1){
             return res.status(400).json({error: "User already exists"})
         }
@@ -23,12 +27,12 @@ class UserController{
 
         db.createUser(user)
 
-        return res.json(user)
+        return res.status(201).json(user)
     }
 
     getUserTechnologies(req: Request, res: Response){
         const db = new UserDB(data)
-        const { user_name } : { user_name: string } = req.headers as { user_name: string } 
+        const  user_name : string = req.body.user.user_name //{ user_name: string } = req.headers as { user_name: string } 
         
         let userTechnologies = db.getUserTechnologies(user_name)
 
@@ -38,8 +42,9 @@ class UserController{
 
     addTechnology(req: Request, res: Response){
         const db = new UserDB(data)
-        const { user_name } : { user_name: string } = req.headers as { user_name: string } 
+        const  user_name : string = req.body.user.user_name //{ user_name: string } = req.headers as { user_name: string } 
         const { title, deadline } : { title: string, deadline: string } = req.body
+
 
         if(new Date(deadline) < new Date()){
             return res.status(400).json({error: "Invalid date"})
@@ -61,7 +66,7 @@ class UserController{
 
     updateTechnology(req: Request, res: Response){
         const db = new UserDB(data)
-        const { user_name } : { user_name: string } = req.headers as { user_name: string } 
+        const  user_name : string = req.body.user.user_name //{ user_name: string } = req.headers as { user_name: string } 
         const { title, deadline } : { title: string, deadline: string } = req.body
         const { id }: { id: string } = req.params as { id : string }
 
@@ -91,7 +96,7 @@ class UserController{
 
     updateTechnologyStatus(req: Request, res: Response){
         const db = new UserDB(data)
-        const { user_name } : { user_name: string } = req.headers as { user_name: string } 
+        const  user_name : string = req.body.user.user_name //{ user_name: string } = req.headers as { user_name: string } 
         const { id }: { id: string } = req.params as { id : string }
 
         const technologyOld = db.getTechnology(user_name, id)
@@ -114,7 +119,7 @@ class UserController{
 
     deleteTechnology(req: Request, res: Response){
         const db = new UserDB(data)
-        const { user_name } : { user_name: string } = req.headers as { user_name: string } 
+        const  user_name : string = req.body.user.user_name //{ user_name: string } = req.headers as { user_name: string } 
         const { id }: { id: string } = req.params as { id : string }
 
         if(!db.getTechnology(user_name, id)){
@@ -123,8 +128,8 @@ class UserController{
 
         db.removeTechnology(user_name, id)
 
-        
-        res.json({status: "Technology removed"})
+        return res.json({...db.getUserTechnologies(user_name)})
+
     }
     
 

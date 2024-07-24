@@ -14,6 +14,14 @@ export default class UserDB{
         return this.database.findIndex((value) => user_name == value.user_name)
     }
 
+    getUser(user_name: string) : User | null{
+        let userIndex = this.findUserByName(user_name)
+        if(userIndex === -1) {
+            return null
+        }
+        return this.database[userIndex]
+    }
+
     getUserTechnologies(user_name: string){
         let userIndex = this.findUserByName(user_name)
         if(userIndex === -1) {
